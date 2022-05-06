@@ -1,0 +1,78 @@
+/*
+ * Copyright (c) 2007-2017 Allwinnertech Co., Ltd.
+ *
+ * This software is licensed under the terms of the GNU General Public
+ * License version 2, as published by the Free Software Foundation, and
+ * may be copied, distributed, and modified under those terms.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ */
+
+#include "pm_i.h"
+
+/*for io-measure time*/
+#define PORT_E_CONFIG (0xf1c20890)
+#define PORT_E_DATA (0xf1c208a0)
+#define PORT_CONFIG PORT_E_CONFIG
+#define PORT_DATA PORT_E_DATA
+
+/*
+ * notice: dependant with perf counter to delay.
+ */
+void io_init(void)
+{
+	/*config port output */
+	*(volatile unsigned int *)(PORT_CONFIG) = 0x111111;
+
+	return;
+}
+
+void io_init_high(void)
+{
+	__u32 data;
+
+	/*set port to high */
+	data = *(volatile unsigned int *)(PORT_DATA);
+	data |= 0x3f;
+	*(volatile unsigned int *)(PORT_DATA) = data;
+
+	return;
+}
+
+void io_init_low(void)
+{
+	__u32 data;
+
+	data = *(volatile unsigned int *)(PORT_DATA);
+	/*set port to low */
+	data &= 0xffffffc0;
+	*(volatile unsigned int *)(PORT_DATA) = data;
+
+	return;
+}
+
+/*
+ * set pa port to high, num range is 0-7;
+ */
+void io_high(int num)
+{
+	__u32 data;
+	data = *(volatile unsigned int *)(PORT_DATA);
+	/*pull low 10ms */
+	data &= (~(1 << num));
+	*(volatile unsigned int *)(PORT_DATA) = data;
+#if defined(CONFIG_ARCH_SUN8IW11P1)
+	delay_us(10000);
+#else
+	mdelay(10);
+#endif
+	/*pull high */
+	data |= (1 << num);
+	*(volatile unsigned int *)(PORT_DATA) = data;
+
+	return;
+}

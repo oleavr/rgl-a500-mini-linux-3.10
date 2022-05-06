@@ -1,0 +1,57 @@
+config BCMDHDPCI
+	tristate "Broadcom Pci FullMAC wireless cards support"
+	---help---
+	  This module adds support for wireless adapters based on
+	  Broadcom FullMAC chipset.
+
+config BCMDHDPCI_FW_PATH
+	depends on BCMDHDPCI
+	string "Firmware path"
+	default "/system/vendor/modules/fw_bcmdhd.bin"
+	---help---
+	  Path to the firmware file.
+
+config BCMDHDPCI_NVRAM_PATH
+	depends on BCMDHDPCI
+	string "NVRAM path"
+	default "/system/vendor/modules/nvram.txt"
+	---help---
+	  Path to the calibration file.
+
+config BCMDHDPCI_WEXT
+	bool "Enable WEXT support"
+	depends on BCMDHDPCI && CFG80211 = n
+	select WIRELESS_EXT
+	select WEXT_PRIV
+	help
+	  Enables WEXT support
+
+choice
+	prompt "Enable Chip Interface"
+	depends on BCMDHDPCI
+	---help---
+		Enable Chip Interface.
+config BCMDHDPCI_SDIO
+		bool "SDIO bus interface support"
+		depends on BCMDHDPCI && MMC
+config BCMDHDPCI_PCIE
+		bool "PCIe bus interface support"
+		depends on BCMDHDPCI && PCI
+endchoice
+
+choice
+	depends on BCMDHDPCI && BCMDHDPCI_SDIO
+	prompt "Interrupt type"
+	---help---
+		Interrupt type
+config BCMDHDPCI_OOB
+	depends on BCMDHDPCI && BCMDHDPCI_SDIO
+	bool "Out-of-Band Interrupt"
+	---help---
+		Interrupt from WL_HOST_WAKE.
+config BCMDHDPCI_SDIO_IRQ
+	depends on BCMDHDPCI && BCMDHDPCI_SDIO
+	bool "In-Band Interrupt"
+	---help---
+	  Interrupt from SDIO DAT[1]
+endchoice

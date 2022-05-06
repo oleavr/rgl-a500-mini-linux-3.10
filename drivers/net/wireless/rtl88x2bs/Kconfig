@@ -1,0 +1,4 @@
+config RTL88x2BS
+	tristate "Realtek 88x2B SDIO WiFi"
+	---help---
+	  Help message of RTL88x2BS
