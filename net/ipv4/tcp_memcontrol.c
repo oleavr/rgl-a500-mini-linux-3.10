@@ -280,9 +280,15 @@ static struct cftype tcp_files[] = {
 	{ }	/* terminate */
 };
 
+#ifdef CONFIG_INET_MODULE
+int tcp_memcontrol_init(void)
+#else
 static int __init tcp_memcontrol_init(void)
+#endif
 {
 	WARN_ON(cgroup_add_cftypes(&mem_cgroup_subsys, tcp_files));
 	return 0;
 }
+#ifndef CONFIG_INET_MODULE
 __initcall(tcp_memcontrol_init);
+#endif

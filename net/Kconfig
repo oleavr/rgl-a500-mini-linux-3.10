@@ -51,7 +51,7 @@ source "net/xfrm/Kconfig"
 source "net/iucv/Kconfig"
 
 config INET
-	bool "TCP/IP networking"
+	tristate "TCP/IP networking"
 	select CRYPTO
 	select CRYPTO_AES
 	---help---

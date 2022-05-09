@@ -1245,8 +1245,10 @@ out:
 out_nopush:
 	release_sock(sk);
 
+#ifndef CONFIG_INET_MODULE
 	if (copied + copied_syn)
 		uid_stat_tcp_snd(current_uid(), copied + copied_syn);
+#endif
 	return copied + copied_syn;
 
 do_fault:
@@ -1551,7 +1553,9 @@ int tcp_read_sock(struct sock *sk, read_descriptor_t *desc,
 	if (copied > 0) {
 		tcp_recv_skb(sk, seq, &offset);
 		tcp_cleanup_rbuf(sk, copied);
+#ifndef CONFIG_INET_MODULE
 		uid_stat_tcp_rcv(current_uid(), copied);
+#endif
 	}
 	return copied;
 }
@@ -1957,8 +1961,10 @@ skip_copy:
 
 	release_sock(sk);
 
+#ifndef CONFIG_INET_MODULE
 	if (copied > 0)
 		uid_stat_tcp_rcv(current_uid(), copied);
+#endif
 	return copied;
 
 out:
@@ -1967,8 +1973,10 @@ out:
 
 recv_urg:
 	err = tcp_recv_urg(sk, msg, len, flags);
+#ifndef CONFIG_INET_MODULE
 	if (err > 0)
 		uid_stat_tcp_rcv(current_uid(), err);
+#endif
 	goto out;
 
 recv_sndq:

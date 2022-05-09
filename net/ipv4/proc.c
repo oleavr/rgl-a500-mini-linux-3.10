@@ -59,7 +59,9 @@ static int sockstat_seq_show(struct seq_file *seq, void *v)
 	sockets = proto_sockets_allocated_sum_positive(&tcp_prot);
 	local_bh_enable();
 
+#ifndef CONFIG_INET_MODULE
 	socket_seq_show(seq);
+#endif
 	seq_printf(seq, "TCP: inuse %d orphan %d tw %d alloc %d mem %ld\n",
 		   sock_prot_inuse_get(net, &tcp_prot), orphans,
 		   tcp_death_row.tw_count, sockets,

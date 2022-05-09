@@ -89,7 +89,7 @@ static const struct net_offload tcpv6_offload = {
 	},
 };
 
-int __init tcpv6_offload_init(void)
+int tcpv6_offload_init(void)
 {
 	return inet6_add_offload(&tcpv6_offload, IPPROTO_TCP);
 }

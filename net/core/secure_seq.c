@@ -32,7 +32,7 @@ static void net_secret_init(void)
 }
 #endif
 
-#ifdef CONFIG_INET
+#if IS_ENABLED(CONFIG_INET)
 static u32 seq_scale(u32 seq)
 {
 	/*

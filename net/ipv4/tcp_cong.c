@@ -137,12 +137,19 @@ int tcp_set_default_congestion_control(const char *name)
 	return ret;
 }
 
+#ifdef CONFIG_INET_MODULE
+int tcp_congestion_init(void)
+#else
 /* Set default value from kernel configuration at bootup */
 static int __init tcp_congestion_default(void)
+#endif
 {
 	return tcp_set_default_congestion_control(CONFIG_DEFAULT_TCP_CONG);
 }
+
+#ifndef CONFIG_INET_MODULE
 late_initcall(tcp_congestion_default);
+#endif
 
 
 /* Build string with list of available congestion control values */

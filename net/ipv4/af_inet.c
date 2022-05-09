@@ -119,6 +119,10 @@
 #include <linux/mroute.h>
 #endif
 
+MODULE_AUTHOR("Cast of dozens");
+MODULE_DESCRIPTION("IPv4 protocol stack for Linux");
+MODULE_LICENSE("GPL");
+
 #ifdef CONFIG_ANDROID_PARANOID_NETWORK
 #include <linux/android_aid.h>
 
@@ -1702,12 +1706,22 @@ static int __init ipv4_offload_init(void)
 	return 0;
 }
 
+#ifndef CONFIG_INET_MODULE
 fs_initcall(ipv4_offload_init);
+#endif
 
 static struct packet_type ip_packet_type __read_mostly = {
 	.type = cpu_to_be16(ETH_P_IP),
 	.func = ip_rcv,
 };
+
+#ifdef CONFIG_INET_MODULE
+int tcp_congestion_init(void);
+int tcp_fastopen_init(void);
+int sysctl_ipv4_init(void);
+int sysfs_ipv4_init(void);
+int tcp_memcontrol_init(void);
+#endif
 
 static int __init inet_init(void)
 {
@@ -1716,6 +1730,12 @@ static int __init inet_init(void)
 	int rc = -EINVAL;
 
 	BUILD_BUG_ON(sizeof(struct inet_skb_parm) > FIELD_SIZEOF(struct sk_buff, cb));
+
+#ifdef CONFIG_INET_MODULE
+	tcp_congestion_init();
+	tcp_fastopen_init();
+	ipv4_offload_init();
+#endif
 
 	sysctl_local_reserved_ports = kzalloc(65536 / 8, GFP_KERNEL);
 	if (!sysctl_local_reserved_ports)
@@ -1822,6 +1842,21 @@ static int __init inet_init(void)
 	ipfrag_init();
 
 	dev_add_pack(&ip_packet_type);
+
+#ifdef CONFIG_INET_MODULE
+#ifdef CONFIG_SYSCTL
+	sysctl_ipv4_init();
+#endif
+#ifdef CONFIG_SYSFS
+	sysfs_ipv4_init();
+#endif
+#ifdef CONFIG_MEMCG_KMEM
+	tcp_memcontrol_init();
+#endif
+
+	/* TODO: Implement unload logic */
+	try_module_get(THIS_MODULE);
+#endif
 
 	rc = 0;
 out:

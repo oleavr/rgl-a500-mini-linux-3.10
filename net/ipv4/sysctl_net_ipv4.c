@@ -958,7 +958,11 @@ static __net_initdata struct pernet_operations ipv4_sysctl_ops = {
 	.exit = ipv4_sysctl_exit_net,
 };
 
+#ifdef CONFIG_INET_MODULE
+int sysctl_ipv4_init(void)
+#else
 static __init int sysctl_ipv4_init(void)
+#endif
 {
 	struct ctl_table_header *hdr;
 	struct ctl_table *i;
@@ -984,4 +988,6 @@ static __init int sysctl_ipv4_init(void)
 	return 0;
 }
 
+#ifndef CONFIG_INET_MODULE
 __initcall(sysctl_ipv4_init);
+#endif

@@ -65,6 +65,7 @@ int inet_twsk_bind_unhash(struct inet_timewait_sock *tw,
 	 */
 	return 1;
 }
+EXPORT_SYMBOL(inet_twsk_unhash);
 
 /* Must be called with locally disabled BHs. */
 static void __inet_twsk_kill(struct inet_timewait_sock *tw,

@@ -77,6 +77,8 @@ static inline int current_has_network(void)
 }
 #endif
 
+#include "ip6_offload.h"
+
 MODULE_AUTHOR("Cast of dozens");
 MODULE_DESCRIPTION("IPv6 protocol stack for Linux");
 MODULE_LICENSE("GPL");
@@ -849,6 +851,8 @@ static int __init inet6_init(void)
 	int err = 0;
 
 	BUILD_BUG_ON(sizeof(struct inet6_skb_parm) > FIELD_SIZEOF(struct sk_buff, cb));
+
+	ipv6_offload_init();
 
 	/* Register the socket-side information for inet6_create.  */
 	for (r = &inetsw6[0]; r < &inetsw6[SOCK_MAX]; ++r)

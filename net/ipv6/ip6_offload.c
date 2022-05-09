@@ -264,7 +264,7 @@ static struct packet_offload ipv6_packet_offload __read_mostly = {
 	},
 };
 
-static int __init ipv6_offload_init(void)
+void ipv6_offload_init(void)
 {
 
 	if (tcpv6_offload_init() < 0)
@@ -275,7 +275,4 @@ static int __init ipv6_offload_init(void)
 		pr_crit("%s: Cannot add EXTHDRS protocol offload\n", __func__);
 
 	dev_add_offload(&ipv6_packet_offload);
-	return 0;
 }
-
-fs_initcall(ipv6_offload_init);

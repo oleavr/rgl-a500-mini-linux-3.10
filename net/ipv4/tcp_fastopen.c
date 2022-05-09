@@ -80,7 +80,11 @@ void tcp_fastopen_cookie_gen(__be32 addr, struct tcp_fastopen_cookie *foc)
 	rcu_read_unlock();
 }
 
+#ifdef CONFIG_INET_MODULE
+int tcp_fastopen_init(void)
+#else
 static int __init tcp_fastopen_init(void)
+#endif
 {
 	__u8 key[TCP_FASTOPEN_KEY_LENGTH];
 
@@ -89,4 +93,6 @@ static int __init tcp_fastopen_init(void)
 	return 0;
 }
 
+#ifndef CONFIG_INET_MODULE
 late_initcall(tcp_fastopen_init);
+#endif

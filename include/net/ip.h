@@ -234,7 +234,7 @@ static inline bool ip_is_fragment(const struct iphdr *iph)
 	return (iph->frag_off & htons(IP_MF | IP_OFFSET)) != 0;
 }
 
-#ifdef CONFIG_INET
+#if IS_ENABLED(CONFIG_INET)
 #include <net/dst.h>
 
 /* The function in 2.2 was invalid, producing wrong result for
@@ -404,7 +404,7 @@ enum ip_defrag_users {
 };
 
 int ip_defrag(struct sk_buff *skb, u32 user);
-#ifdef CONFIG_INET
+#if IS_ENABLED(CONFIG_INET)
 struct sk_buff *ip_check_defrag(struct sk_buff *skb, u32 user);
 #else
 static inline struct sk_buff *ip_check_defrag(struct sk_buff *skb, u32 user)

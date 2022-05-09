@@ -582,6 +582,7 @@ out:
 		return ret;
 	}
 }
+EXPORT_SYMBOL(__inet_hash_connect);
 
 /*
  * Bind a port for a connect operation and hash it.

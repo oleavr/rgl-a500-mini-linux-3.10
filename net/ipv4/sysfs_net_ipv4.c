@@ -67,7 +67,11 @@ static struct attribute_group ipv4_attr_group = {
 	.attrs = ipv4_attrs,
 };
 
+#ifdef CONFIG_INET_MODULE
+int sysfs_ipv4_init(void)
+#else
 static __init int sysfs_ipv4_init(void)
+#endif
 {
 	struct kobject *ipv4_kobject;
 	int ret;
@@ -85,4 +89,6 @@ static __init int sysfs_ipv4_init(void)
 	return 0;
 }
 
+#ifndef CONFIG_INET_MODULE
 subsys_initcall(sysfs_ipv4_init);
+#endif

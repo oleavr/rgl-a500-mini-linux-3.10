@@ -11,6 +11,7 @@
 #ifndef __ip6_offload_h
 #define __ip6_offload_h
 
+void ipv6_offload_init(void);
 int ipv6_exthdrs_offload_init(void);
 int udp_offload_init(void);
 int tcpv6_offload_init(void);

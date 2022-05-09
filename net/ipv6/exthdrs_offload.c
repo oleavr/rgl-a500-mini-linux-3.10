@@ -20,7 +20,7 @@ static const struct net_offload dstopt_offload = {
 	.flags		=	INET6_PROTO_GSO_EXTHDR,
 };
 
-int __init ipv6_exthdrs_offload_init(void)
+int ipv6_exthdrs_offload_init(void)
 {
 	int ret;
 

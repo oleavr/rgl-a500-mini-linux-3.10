@@ -1413,7 +1413,9 @@ static int __udp_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
 					 is_udplite);
 		UDP_INC_STATS_BH(sock_net(sk), UDP_MIB_INERRORS, is_udplite);
 		kfree_skb(skb);
+#ifndef CONFIG_INET_MODULE
 		trace_udp_fail_queue_rcv_skb(rc, sk);
+#endif
 		return -1;
 	}
 
